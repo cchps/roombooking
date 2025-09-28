@@ -1,0 +1,3186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest Room Booking System - Chakaria Campus, ICDDRB</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --secondary: #ec4899;
+            --secondary-dark: #db2777;
+            --success: #10b981;
+            --success-dark: #059669;
+            --warning: #f59e0b;
+            --warning-dark: #d97706;
+            --danger: #ef4444;
+            --danger-dark: #dc2626;
+            --dark: #1f2937;
+            --dark-light: #374151;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --white: #ffffff;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            --ring-offset-shadow: 0 0 #0000;
+            --ring-shadow: 0 0 #0000;
+            --border-radius: 0.75rem;
+            --border-radius-lg: 1rem;
+            --border-radius-xl: 1.25rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+        }
+
+        /* Modern Glassmorphism Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            overflow: hidden;
+        }
+
+        .animated-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-20px) rotate(1deg);
+            }
+        }
+
+        /* Sophisticated Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 3rem 2.5rem;
+            border-radius: var(--border-radius-xl);
+            box-shadow: var(--shadow-2xl);
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+            animation: slideInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(60px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+            position: relative;
+            animation: pulse 3s ease-in-out infinite;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-logo::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.3;
+            animation: pulse-ring 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes pulse-ring {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.1;
+            }
+        }
+
+        .welcome-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .welcome-subtitle {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gray-700);
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.025em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 3rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--white);
+            color: var(--gray-900);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: var(--ring-offset-shadow), var(--ring-shadow), 0 0 0 3px rgba(99, 102, 241, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            bottom: 1rem;
+            color: var(--gray-400);
+            font-size: 1.125rem;
+            transition: color 0.2s ease;
+        }
+
+        .form-group input:focus+i {
+            color: var(--primary);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            letter-spacing: 0.025em;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .error-message,
+        .success-message {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            animation: slideInDown 0.3s ease;
+            border: 1px solid;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-dark);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .success-message {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-dark);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        /* Modern Dashboard Styles */
+        .dashboard-container {
+            background: var(--gray-50);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        .header {
+            background: var(--white);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-logo {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-titles h1 {
+            color: var(--gray-900);
+            font-size: 1.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.025em;
+        }
+
+        .header-titles .subtitle {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-top: 0.125rem;
+        }
+
+        .header-titles .system-type {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-top: 0.25rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .current-time {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .current-time .date {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .logout-btn {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Modern Navigation */
+        .nav-menu {
+            background: var(--white);
+            padding: 0 2rem;
+            display: flex;
+            gap: 0.25rem;
+            box-shadow: var(--shadow-sm);
+            border-bottom: 1px solid var(--gray-200);
+            overflow-x: auto;
+        }
+
+        .nav-btn {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s ease;
+            color: var(--gray-600);
+            font-weight: 600;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            font-size: 0.875rem;
+            position: relative;
+        }
+
+        .nav-btn:hover {
+            background: var(--gray-100);
+            color: var(--gray-900);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: var(--gray-50);
+        }
+
+        .nav-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .section-title-group h2 {
+            color: var(--gray-900);
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title-group p {
+            color: var(--gray-600);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .section-title-group .section-icon {
+            color: var(--primary);
+            margin-right: 0.75rem;
+        }
+
+        /* Modern Button Styles */
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            box-shadow: var(--shadow-sm);
+            letter-spacing: 0.025em;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--gray-600);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            font-size: 0.875rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-700);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Modern Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .stat-card.revenue::before {
+            background: linear-gradient(90deg, var(--success), #34d399);
+        }
+
+        .stat-card.expenses::before {
+            background: linear-gradient(90deg, var(--danger), #f87171);
+        }
+
+        .stat-card.profit::before {
+            background: linear-gradient(90deg, var(--warning), #fbbf24);
+        }
+
+        .stat-card.occupancy::before {
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-icon.revenue {
+            background: linear-gradient(135deg, var(--success), #34d399);
+        }
+
+        .stat-icon.expenses {
+            background: linear-gradient(135deg, var(--danger), #f87171);
+        }
+
+        .stat-icon.profit {
+            background: linear-gradient(135deg, var(--warning), #fbbf24);
+        }
+
+        .stat-icon.occupancy {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .stat-content h3 {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            line-height: 1;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.025em;
+        }
+
+        .stat-change {
+            font-size: 0.875rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        .stat-change.negative {
+            color: var(--danger);
+        }
+
+        /* Modern Room Cards */
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .room-card {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--gray-200);
+        }
+
+        .room-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .room-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+            transform-origin: left;
+        }
+
+        .room-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .room-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: -0.025em;
+        }
+
+        .room-number i {
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+        }
+
+        .room-status {
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid;
+        }
+
+        .room-status.available {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-dark);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .room-status.occupied {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-dark);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .room-status.maintenance {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-dark);
+            border-color: rgba(245, 158, 11, 0.2);
+        }
+
+        .room-type {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 1.5rem;
+            text-transform: capitalize;
+        }
+
+        .room-rates {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .room-rates h4 {
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rate-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0.75rem 0;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .rate-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .rate-label {
+            color: var(--gray-600);
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .rate-value {
+            color: var(--gray-900);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .room-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        /* Modern Tables */
+        .table-container {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .table-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: 0.025em;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--gray-50);
+            padding: 1rem 1.5rem;
+            text-align: left;
+            color: var(--gray-900);
+            font-weight: 700;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            color: var(--gray-900);
+            vertical-align: middle;
+            font-weight: 500;
+        }
+
+        tr:hover {
+            background: var(--gray-50);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Modern Filters */
+        .filters-container {
+            background: var(--white);
+            padding: 1.5rem 2rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.025em;
+        }
+
+        .filter-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            background: var(--white);
+            color: var(--gray-900);
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        /* Modern Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background: var(--white);
+            margin: 2% auto;
+            padding: 0;
+            border-radius: var(--border-radius-xl);
+            width: 90%;
+            max-width: 600px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideInDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: var(--border-radius-xl) var(--border-radius-xl) 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            letter-spacing: 0.025em;
+        }
+
+        .close {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.25rem;
+            transition: background 0.2s ease;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.025em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background: var(--white);
+            color: var(--gray-900);
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        /* Status badges */
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid;
+        }
+
+        .status-confirmed {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-dark);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .status-checked-in {
+            background: rgba(59, 130, 246, 0.1);
+            color: #1d4ed8;
+            border-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .status-checked-out {
+            background: rgba(107, 114, 128, 0.1);
+            color: var(--gray-700);
+            border-color: rgba(107, 114, 128, 0.2);
+        }
+
+        .status-cancelled {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger-dark);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        /* Action buttons */
+        .action-btn {
+            padding: 0.5rem 0.75rem;
+            margin: 0 0.125rem;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-btn.edit {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .action-btn.delete {
+            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+            color: white;
+        }
+
+        .action-btn.checkin {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: white;
+        }
+
+        .action-btn.checkout {
+            background: linear-gradient(135deg, var(--warning), var(--warning-dark));
+            color: white;
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .chart-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 1px solid var(--gray-200);
+        }
+
+        .chart-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: 0.025em;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(99, 102, 241, 0.3);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 600;
+            z-index: 1001;
+            animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            max-width: 400px;
+            box-shadow: var(--shadow-xl);
+            border: 1px solid;
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-menu {
+                padding: 0 1rem;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .room-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 5% auto;
+            }
+
+            .login-box {
+                margin: 1rem;
+                padding: 2rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-titles h1 {
+                font-size: 1.25rem;
+            }
+
+            .section-title-group h2 {
+                font-size: 1.5rem;
+            }
+
+            .stat-value {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="animated-bg"></div>
+
+    <!-- Modern Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box" data-aos="zoom-in" data-aos-duration="800">
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="fas fa-key"></i>
+                </div>
+                <h2 class="welcome-text">Admin Access</h2>
+                <p class="welcome-subtitle">Secure login required</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="Enter your email" value="jubaer@icddrb" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter your password" value="jubaer@2025" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+                <button type="submit" class="login-btn" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Access Dashboard</span>
+                </button>
+                <div id="loginError" class="error-message" style="display: none;"></div>
+                <div id="loginSuccess" class="success-message" style="display: none;"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modern Dashboard -->
+    <div id="dashboard" class="dashboard-container" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="header-logo">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="header-titles">
+                    <h1>Chakaria Campus, ICDDRB</h1>
+                    <div class="subtitle">International Centre for Diarrhoeal Disease Research</div>
+                    <div class="system-type">Guest Room Booking System</div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="current-time">
+                    <span class="date" id="currentDate"></span>
+                    <span id="currentTime"></span>
+                </div>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-menu">
+            <button class="nav-btn active" data-section="dashboard">
+                <i class="fas fa-chart-pie"></i> Dashboard
+            </button>
+            <button class="nav-btn" data-section="rooms">
+                <i class="fas fa-bed"></i> Rooms
+            </button>
+            <button class="nav-btn" data-section="bookings">
+                <i class="fas fa-calendar-check"></i> Bookings
+            </button>
+            <button class="nav-btn" data-section="accounts">
+                <i class="fas fa-chart-line"></i> Accounts
+            </button>
+            <button class="nav-btn" data-section="reports">
+                <i class="fas fa-file-chart-line"></i> Reports
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="dashboardSection" class="content-section active">
+                <div class="section-header">
+                    <div class="section-title-group">
+                        <h2>
+                            <i class="fas fa-chart-pie section-icon"></i>
+                            Dashboard Overview
+                        </h2>
+                        <p>Real-time insights and key metrics for your guest room operations</p>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card revenue" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat-header">
+                            <div class="stat-content">
+                                <h3>Total Revenue</h3>
+                                <div class="stat-value" id="dashboardRevenue">৳0</div>
+                                <div class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>+12% from last month</span>
+                                </div>
+                            </div>
+                            <div class="stat-icon revenue">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card expenses" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-header">
+                            <div class="stat-content">
+                                <h3>Total Expenses</h3>
+                                <div class="stat-value" id="dashboardExpenses">৳0</div>
+                                <div class="stat-change negative">
+                                    <i class="fas fa-arrow-down"></i>
+                                    <span>-5% from last month</span>
+                                </div>
+                            </div>
+                            <div class="stat-icon expenses">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card profit" data-aos="fade-up" data-aos-delay="300">
+                        <div class="stat-header">
+                            <div class="stat-content">
+                                <h3>Net Profit</h3>
+                                <div class="stat-value" id="dashboardProfit">৳0</div>
+                                <div class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>+18% from last month</span>
+                                </div>
+                            </div>
+                            <div class="stat-icon profit">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card occupancy" data-aos="fade-up" data-aos-delay="400">
+                        <div class="stat-header">
+                            <div class="stat-content">
+                                <h3>Occupancy Rate</h3>
+                                <div class="stat-value" id="dashboardOccupancy">0%</div>
+                                <div class="stat-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>+8% from last month</span>
+                                </div>
+                            </div>
+                            <div class="stat-icon occupancy">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="table-container" data-aos="fade-up" data-aos-delay="500">
+                    <div class="table-header">
+                        <div class="table-title">
+                            <i class="fas fa-bolt"></i>
+                            Quick Actions
+                        </div>
+                    </div>
+                    <div
+                        style="padding: 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+                        <button class="btn-primary" onclick="hotelApp.openBookingModal()">
+                            <i class="fas fa-plus"></i>
+                            New Booking
+                        </button>
+                        <button class="btn-primary" onclick="hotelApp.openRoomModal()">
+                            <i class="fas fa-bed"></i>
+                            Add Room
+                        </button>
+                        <button class="btn-primary" onclick="hotelApp.openExpenseModal()">
+                            <i class="fas fa-receipt"></i>
+                            Add Expense
+                        </button>
+                        <button class="btn-primary" onclick="hotelApp.showSection('reports')">
+                            <i class="fas fa-chart-bar"></i>
+                            View Reports
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="table-container" data-aos="fade-up" data-aos-delay="600">
+                    <div class="table-header">
+                        <div class="table-title">
+                            <i class="fas fa-clock"></i>
+                            Recent Activity
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recentActivityBody">
+                                <!-- Recent activities will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Rooms Section -->
+            <section id="roomsSection" class="content-section">
+                <div class="section-header">
+                    <div class="section-title-group">
+                        <h2>
+                            <i class="fas fa-bed section-icon"></i>
+                            Room Management
+                        </h2>
+                        <p>Manage guest rooms, pricing, and availability status</p>
+                    </div>
+                    <button id="addRoomBtn" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add Room
+                    </button>
+                </div>
+                <div class="room-grid" id="roomGrid">
+                    <!-- Rooms will be dynamically loaded -->
+                </div>
+            </section>
+
+            <!-- Bookings Section -->
+            <section id="bookingsSection" class="content-section">
+                <div class="section-header">
+                    <div class="section-title-group">
+                        <h2>
+                            <i class="fas fa-calendar-check section-icon"></i>
+                            Booking Management
+                        </h2>
+                        <p>Track reservations, check-ins, and guest information</p>
+                    </div>
+                    <button id="newBookingBtn" class="btn-primary">
+                        <i class="fas fa-plus"></i> New Booking
+                    </button>
+                </div>
+
+                <div class="filters-container">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label>Filter by Date</label>
+                            <input type="date" id="filterDate" class="filter-input">
+                        </div>
+                        <div class="filter-group">
+                            <label>Filter by Room</label>
+                            <select id="filterRoom" class="filter-input">
+                                <option value="">All Rooms</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Filter by Status</label>
+                            <select id="filterStatus" class="filter-input">
+                                <option value="">All Status</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="checked-in">Checked In</option>
+                                <option value="checked-out">Checked Out</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <button class="btn-primary" onclick="hotelApp.clearFilters()">
+                                <i class="fas fa-times"></i>
+                                Clear Filters
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-title">
+                            <i class="fas fa-list"></i>
+                            All Bookings
+                        </div>
+                        <span id="bookingCount" class="badge">0 bookings</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="bookingsTable">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Guest Name</th>
+                                    <th>Room</th>
+                                    <th>Check-in</th>
+                                    <th>Check-out</th>
+                                    <th>Duration</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsTableBody">
+                                <!-- Bookings will be dynamically loaded -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Accounts Section -->
+            <section id="accountsSection" class="content-section">
+                <div class="section-header">
+                    <div class="section-title-group">
+                        <h2>
+                            <i class="fas fa-chart-line section-icon"></i>
+                            Account Management
+                        </h2>
+                        <p>Monitor financial performance and expense tracking</p>
+                    </div>
+                    <button id="addExpenseBtn" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add Expense
+                    </button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card revenue">
+                        <div class="stat-header">
+                            <div class="stat-content">
+                                <h3>Total Revenue</h3>
+                                <div class="stat-value" id="totalRevenue">৳0</div>
+                            </div>
+                            <div class="stat-icon revenue">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card expenses">
+                        <div class="stat-header">
+                            <div class="stat-content">
+                                <h3>Total Expenses</h3>
+                                <div class="stat-value" id="totalExpenses">৳0</div>
+                            </div>
+                            <div class="stat-icon expenses">
+                                <i class="fas fa-receipt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card profit">
+                        <div class="stat-header">
+                            <div class="stat-content">
+                                <h3>Net Profit</h3>
+                                <div class="stat-value" id="netProfit">৳0</div>
+                            </div>
+                            <div class="stat-icon profit">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <div class="table-title">
+                            <i class="fas fa-receipt"></i>
+                            Expense Records
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="expenseTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Category</th>
+                                    <th>Amount</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expenseTableBody">
+                                <!-- Expenses will be dynamically loaded -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reportsSection" class="content-section">
+                <div class="section-header">
+                    <div class="section-title-group">
+                        <h2>
+                            <i class="fas fa-file-chart-line section-icon"></i>
+                            Reports & Analytics
+                        </h2>
+                        <p>Comprehensive insights and performance analytics</p>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <select id="reportPeriod" class="filter-input">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                        <input type="month" id="reportMonth" class="filter-input">
+                        <button id="generateReportBtn" class="btn-primary">
+                            <i class="fas fa-sync"></i>
+                            Generate
+                        </button>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="chart-header">
+                            <h3 class="chart-title">
+                                <i class="fas fa-percentage"></i>
+                                Occupancy Rate
+                            </h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="occupancyChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="chart-header">
+                            <h3 class="chart-title">
+                                <i class="fas fa-chart-line"></i>
+                                Revenue Trend
+                            </h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-calendar-plus"></i>
+                    New Booking
+                </h2>
+                <button class="close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="bookingForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Guest Name</label>
+                            <input type="text" id="guestName" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="tel" id="guestPhone" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="guestEmail">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Select Room</label>
+                            <select id="selectedRoom" required>
+                                <option value="">Choose a room</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Booking Type</label>
+                            <select id="bookingType" required>
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Check-in Date & Time</label>
+                            <input type="datetime-local" id="checkinDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Check-out Date & Time</label>
+                            <input type="datetime-local" id="checkoutDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Total Amount (৳)</label>
+                        <input type="number" id="totalAmount" readonly
+                            style="background: var(--gray-50); font-weight: 700; font-size: 1.125rem; color: var(--primary);">
+                    </div>
+                    <div class="form-group">
+                        <label>Special Requests</label>
+                        <textarea id="specialRequests" rows="3"
+                            placeholder="Any special requests or notes..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal('bookingModal')">Cancel</button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i>
+                            Create Booking
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Room Modal -->
+    <div id="roomModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-bed"></i>
+                    <span id="roomModalTitle">Add Room</span>
+                </h2>
+                <button class="close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="roomForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Room Number</label>
+                            <input type="text" id="roomNumber" required placeholder="e.g., 001">
+                        </div>
+                        <div class="form-group">
+                            <label>Room Type</label>
+                            <select id="roomType" required>
+                                <option value="">Select type</option>
+                                <option value="single">Single Room</option>
+                                <option value="double">Double Room</option>
+                                <option value="suite">Suite</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Daily Rate (৳)</label>
+                            <input type="number" id="dailyRate" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Weekly Rate (৳)</label>
+                            <input type="number" id="weeklyRate" required min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Monthly Rate (৳)</label>
+                            <input type="number" id="monthlyRate" required min="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Room Description</label>
+                        <textarea id="roomDescription" rows="3"
+                            placeholder="Describe the room amenities and features..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal('roomModal')">Cancel</button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i>
+                            Save Room
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Expense Modal -->
+    <div id="expenseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-receipt"></i>
+                    Add Expense
+                </h2>
+                <button class="close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="expenseForm">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="expenseDescription" required placeholder="What was this expense for?">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="expenseCategory" required>
+                                <option value="">Select category</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="utilities">Utilities</option>
+                                <option value="supplies">Supplies</option>
+                                <option value="staff">Staff</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount (৳)</label>
+                            <input type="number" id="expenseAmount" required min="0" step="0.01">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="expenseDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="expenseNotes" rows="3" placeholder="Additional notes or details..."></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeModal('expenseModal')">Cancel</button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i>
+                            Add Expense
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import Firebase functions
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { getDatabase, ref, set, get, update, remove, onValue, push, child } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js';
+        import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAN39VWoH-qKoTPK0WDeczSUSnp92GitR8",
+            authDomain: "hotelbooking-597f6.firebaseapp.com",
+            databaseURL: "https://hotelbooking-597f6-default-rtdb.firebaseio.com",
+            projectId: "hotelbooking-597f6",
+            storageBucket: "hotelbooking-597f6.firebasestorage.app",
+            messagingSenderId: "403942547689",
+            appId: "1:403942547689:web:658df244c36791c058d078",
+            measurementId: "G-VGJNCZ1GQB"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const analytics = getAnalytics(app);
+
+        // Make Firebase available globally
+        window.database = database;
+        window.firebaseUtils = {
+            ref, set, get, update, remove, onValue, push, child
+        };
+
+        // Hotel Management Application
+        class HotelManagementApp {
+            constructor() {
+                this.rooms = [];
+                this.bookings = [];
+                this.expenses = [];
+                this.currentSection = 'dashboard';
+                this.currentUser = null;
+                this.recentActivities = [];
+                this.isLoggedIn = false;
+
+                this.roomPrices = {
+                    single: { daily: 1000, weekly: 6000, monthly: 20000 },
+                    double: { daily: 1500, weekly: 9000, monthly: 30000 },
+                    suite: { daily: 2500, weekly: 15000, monthly: 50000 }
+                };
+
+                // Admin credentials
+                this.adminCredentials = {
+                    email: 'jubaer@icddrb',
+                    password: 'jubaer@2025'
+                };
+
+                this.init();
+            }
+
+            async init() {
+                // Initialize AOS
+                if (typeof AOS !== 'undefined') {
+                    AOS.init({
+                        duration: 800,
+                        once: true,
+                        offset: 50
+                    });
+                }
+
+                this.setupEventListeners();
+                this.updateCurrentDateTime();
+
+                // Update time every second
+                setInterval(() => this.updateCurrentDateTime(), 1000);
+
+                // Check if user is already logged in
+                const isLoggedIn = localStorage.getItem('hotelAdmin_loggedIn');
+                if (isLoggedIn === 'true') {
+                    this.isLoggedIn = true;
+                    await this.showDashboard();
+                } else {
+                    this.showLogin();
+                }
+            }
+
+            setupEventListeners() {
+                // Login form
+                document.getElementById('loginForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+
+                // Logout button
+                document.getElementById('logoutBtn').addEventListener('click', () => {
+                    this.logout();
+                });
+
+                // Navigation
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const section = e.target.getAttribute('data-section');
+                        this.showSection(section);
+                    });
+                });
+
+                // Modal handlers
+                this.setupModalHandlers();
+                this.setupFormHandlers();
+                this.setupFilterHandlers();
+            }
+
+            setupModalHandlers() {
+                document.querySelectorAll('.close').forEach(closeBtn => {
+                    closeBtn.addEventListener('click', (e) => {
+                        const modal = e.target.closest('.modal');
+                        modal.style.display = 'none';
+                    });
+                });
+
+                window.addEventListener('click', (e) => {
+                    if (e.target.classList.contains('modal')) {
+                        e.target.style.display = 'none';
+                    }
+                });
+
+                document.getElementById('newBookingBtn').addEventListener('click', () => {
+                    this.openBookingModal();
+                });
+
+                document.getElementById('addRoomBtn').addEventListener('click', () => {
+                    this.openRoomModal();
+                });
+
+                document.getElementById('addExpenseBtn').addEventListener('click', () => {
+                    this.openExpenseModal();
+                });
+
+                document.getElementById('generateReportBtn').addEventListener('click', () => {
+                    this.loadReports();
+                });
+            }
+
+            setupFormHandlers() {
+                document.getElementById('bookingForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.createBooking();
+                });
+
+                document.getElementById('roomForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveRoom();
+                });
+
+                document.getElementById('expenseForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addExpense();
+                });
+
+                ['selectedRoom', 'bookingType', 'checkinDate', 'checkoutDate'].forEach(id => {
+                    document.getElementById(id).addEventListener('change', () => {
+                        this.calculateBookingAmount();
+                    });
+                });
+            }
+
+            setupFilterHandlers() {
+                ['filterDate', 'filterRoom', 'filterStatus'].forEach(id => {
+                    document.getElementById(id).addEventListener('change', () => {
+                        this.filterBookings();
+                    });
+                });
+            }
+
+            updateCurrentDateTime() {
+                const now = new Date();
+                const dateOptions = {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                };
+                const timeOptions = {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                };
+
+                document.getElementById('currentDate').textContent = now.toLocaleDateString('en-BD', dateOptions);
+                document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-BD', timeOptions);
+            }
+
+            async handleLogin() {
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const errorDiv = document.getElementById('loginError');
+                const successDiv = document.getElementById('loginSuccess');
+                const loginBtn = document.getElementById('loginBtn');
+
+                // Show loading state
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<div class="loading"></div><span>Authenticating...</span>';
+
+                try {
+                    // Simple credential check (no Firebase Auth)
+                    if (email === this.adminCredentials.email && password === this.adminCredentials.password) {
+                        this.isLoggedIn = true;
+                        localStorage.setItem('hotelAdmin_loggedIn', 'true');
+
+                        errorDiv.style.display = 'none';
+                        successDiv.textContent = 'Authentication successful! Redirecting...';
+                        successDiv.style.display = 'block';
+
+                        setTimeout(() => {
+                            this.showDashboard();
+                        }, 1000);
+
+                    } else {
+                        throw new Error('Invalid credentials. Please check your email and password.');
+                    }
+                } catch (error) {
+                    errorDiv.textContent = error.message;
+                    errorDiv.style.display = 'block';
+                    successDiv.style.display = 'none';
+                } finally {
+                    // Reset button state
+                    setTimeout(() => {
+                        loginBtn.disabled = false;
+                        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i><span>Access Dashboard</span>';
+                    }, 2000);
+                }
+            }
+
+            logout() {
+                this.isLoggedIn = false;
+                localStorage.removeItem('hotelAdmin_loggedIn');
+                this.showLogin();
+                this.showNotification('Logged out successfully', 'success');
+            }
+
+            showLogin() {
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('dashboard').style.display = 'none';
+            }
+
+            async showDashboard() {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+
+                await this.initializeRooms();
+                await this.loadData();
+                this.setupRealtimeUpdates();
+                this.showSection('dashboard');
+            }
+
+            showSection(section) {
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelector(`[data-section="${section}"]`).classList.add('active');
+
+                document.querySelectorAll('.content-section').forEach(sec => {
+                    sec.classList.remove('active');
+                });
+                document.getElementById(`${section}Section`).classList.add('active');
+
+                this.currentSection = section;
+
+                switch (section) {
+                    case 'dashboard':
+                        this.loadDashboard();
+                        break;
+                    case 'rooms':
+                        this.loadRooms();
+                        break;
+                    case 'bookings':
+                        this.loadBookings();
+                        break;
+                    case 'accounts':
+                        this.loadAccounts();
+                        break;
+                    case 'reports':
+                        this.loadReports();
+                        break;
+                }
+            }
+
+            async initializeRooms() {
+                try {
+                    const roomsRef = ref(database, 'rooms');
+                    const snapshot = await get(roomsRef);
+
+                    if (!snapshot.exists()) {
+                        const roomsData = {};
+
+                        for (let i = 1; i <= 10; i++) {
+                            const roomId = `room_${i}`;
+                            roomsData[roomId] = {
+                                id: roomId,
+                                number: i.toString().padStart(3, '0'),
+                                type: i <= 4 ? 'single' : i <= 8 ? 'double' : 'suite',
+                                status: 'available',
+                                rates: this.roomPrices[i <= 4 ? 'single' : i <= 8 ? 'double' : 'suite'],
+                                description: `Comfortable ${i <= 4 ? 'single' : i <= 8 ? 'double' : 'suite'} room with modern amenities`,
+                                createdAt: new Date().toISOString()
+                            };
+                        }
+
+                        await set(roomsRef, roomsData);
+                        this.addActivity('System', 'Initialized 10 guest rooms', 'success');
+                    }
+                } catch (error) {
+                    console.error('Error initializing rooms:', error);
+                    this.showNotification('Error initializing rooms: ' + error.message, 'error');
+                }
+            }
+
+            async loadData() {
+                try {
+                    // Load rooms
+                    const roomsSnapshot = await get(ref(database, 'rooms'));
+                    if (roomsSnapshot.exists()) {
+                        const roomsData = roomsSnapshot.val();
+                        this.rooms = Object.keys(roomsData).map(key => ({ id: key, ...roomsData[key] }));
+                    }
+
+                    // Load bookings
+                    const bookingsSnapshot = await get(ref(database, 'bookings'));
+                    if (bookingsSnapshot.exists()) {
+                        const bookingsData = bookingsSnapshot.val();
+                        this.bookings = Object.keys(bookingsData).map(key => ({ id: key, ...bookingsData[key] }));
+                        this.bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    }
+
+                    // Load expenses
+                    const expensesSnapshot = await get(ref(database, 'expenses'));
+                    if (expensesSnapshot.exists()) {
+                        const expensesData = expensesSnapshot.val();
+                        this.expenses = Object.keys(expensesData).map(key => ({ id: key, ...expensesData[key] }));
+                        this.expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    }
+
+                } catch (error) {
+                    console.error('Error loading data:', error);
+                    this.showNotification('Error loading data: ' + error.message, 'error');
+                }
+            }
+
+            setupRealtimeUpdates() {
+                // Real-time updates for bookings
+                onValue(ref(database, 'bookings'), (snapshot) => {
+                    if (snapshot.exists()) {
+                        const bookingsData = snapshot.val();
+                        this.bookings = Object.keys(bookingsData).map(key => ({ id: key, ...bookingsData[key] }));
+                        this.bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    } else {
+                        this.bookings = [];
+                    }
+
+                    if (this.currentSection === 'bookings' || this.currentSection === 'dashboard') {
+                        this.loadBookings();
+                        this.loadDashboard();
+                    }
+                });
+
+                // Real-time updates for rooms
+                onValue(ref(database, 'rooms'), (snapshot) => {
+                    if (snapshot.exists()) {
+                        const roomsData = snapshot.val();
+                        this.rooms = Object.keys(roomsData).map(key => ({ id: key, ...roomsData[key] }));
+                    } else {
+                        this.rooms = [];
+                    }
+
+                    if (this.currentSection === 'rooms' || this.currentSection === 'dashboard') {
+                        this.loadRooms();
+                        this.loadDashboard();
+                    }
+                });
+
+                // Real-time updates for expenses
+                onValue(ref(database, 'expenses'), (snapshot) => {
+                    if (snapshot.exists()) {
+                        const expensesData = snapshot.val();
+                        this.expenses = Object.keys(expensesData).map(key => ({ id: key, ...expensesData[key] }));
+                        this.expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    } else {
+                        this.expenses = [];
+                    }
+
+                    if (this.currentSection === 'accounts' || this.currentSection === 'dashboard') {
+                        this.loadAccounts();
+                        this.loadDashboard();
+                    }
+                });
+            }
+
+            // Dashboard Methods
+            loadDashboard() {
+                this.updateDashboardStats();
+                this.loadRecentActivity();
+            }
+
+            updateDashboardStats() {
+                const totalRevenue = this.bookings
+                    .filter(b => b.status === 'checked-out')
+                    .reduce((sum, booking) => sum + (booking.totalAmount || 0), 0);
+
+                const totalExpenses = this.expenses
+                    .reduce((sum, expense) => sum + (expense.amount || 0), 0);
+
+                const netProfit = totalRevenue - totalExpenses;
+
+                const occupiedRooms = this.rooms.filter(r => r.status === 'occupied').length;
+                const occupancyRate = this.rooms.length > 0 ? (occupiedRooms / this.rooms.length * 100).toFixed(1) : 0;
+
+                document.getElementById('dashboardRevenue').textContent = `৳${totalRevenue.toLocaleString()}`;
+                document.getElementById('dashboardExpenses').textContent = `৳${totalExpenses.toLocaleString()}`;
+                document.getElementById('dashboardProfit').textContent = `৳${netProfit.toLocaleString()}`;
+                document.getElementById('dashboardOccupancy').textContent = `${occupancyRate}%`;
+            }
+
+            loadRecentActivity() {
+                const tbody = document.getElementById('recentActivityBody');
+                tbody.innerHTML = '';
+
+                const recentBookings = this.bookings.slice(0, 5);
+
+                recentBookings.forEach(booking => {
+                    const row = document.createElement('tr');
+                    const room = this.rooms.find(r => r.id === booking.roomId);
+                    const createdAt = new Date(booking.createdAt);
+
+                    row.innerHTML = `
+                        <td style="font-weight: 600;">${createdAt.toLocaleTimeString()}</td>
+                        <td>New Booking</td>
+                        <td><strong>${booking.guestName}</strong> - Room ${room?.number || 'N/A'}</td>
+                        <td><span class="status-badge status-${booking.status}">${booking.status}</span></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                if (recentBookings.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--gray-500); padding: 2rem;">No recent activity</td></tr>';
+                }
+            }
+
+            // Room Management
+            loadRooms() {
+                const roomGrid = document.getElementById('roomGrid');
+                roomGrid.innerHTML = '';
+
+                this.rooms.forEach((room, index) => {
+                    const roomCard = this.createRoomCard(room);
+                    if (typeof AOS !== 'undefined') {
+                        roomCard.setAttribute('data-aos', 'fade-up');
+                        roomCard.setAttribute('data-aos-delay', (index * 100).toString());
+                    }
+                    roomGrid.appendChild(roomCard);
+                });
+
+                // Refresh AOS if available
+                if (typeof AOS !== 'undefined') {
+                    AOS.refresh();
+                }
+            }
+
+            createRoomCard(room) {
+                const card = document.createElement('div');
+                card.className = 'room-card';
+
+                card.innerHTML = `
+                    <div class="room-header">
+                        <div class="room-number">
+                            <i class="fas fa-bed"></i>
+                            Room ${room.number}
+                        </div>
+                        <span class="room-status ${room.status}">${room.status.toUpperCase()}</span>
+                    </div>
+                    <div class="room-type">${room.type.charAt(0).toUpperCase() + room.type.slice(1)} Room</div>
+                    <div class="room-rates">
+                        <h4><i class="fas fa-tags"></i> Pricing</h4>
+                        <div class="rate-row">
+                            <span class="rate-label">Daily Rate:</span>
+                            <span class="rate-value">৳${room.rates.daily}</span>
+                        </div>
+                        <div class="rate-row">
+                            <span class="rate-label">Weekly Rate:</span>
+                            <span class="rate-value">৳${room.rates.weekly}</span>
+                        </div>
+                        <div class="rate-row">
+                            <span class="rate-label">Monthly Rate:</span>
+                            <span class="rate-value">৳${room.rates.monthly}</span>
+                        </div>
+                    </div>
+                    <div class="room-actions">
+                        <button class="action-btn edit" onclick="hotelApp.editRoom('${room.id}')">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        ${room.status === 'available' ? `
+                            <button class="action-btn checkin" onclick="hotelApp.openBookingModal('${room.id}')">
+                                <i class="fas fa-calendar-plus"></i> Book
+                            </button>
+                        ` : room.status === 'occupied' ? `
+                            <button class="action-btn checkout" onclick="hotelApp.checkoutRoom('${room.id}')">
+                                <i class="fas fa-sign-out-alt"></i> Checkout
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+
+                return card;
+            }
+
+            openRoomModal(roomId = null) {
+                const modal = document.getElementById('roomModal');
+                const form = document.getElementById('roomForm');
+                const title = document.getElementById('roomModalTitle');
+
+                if (roomId) {
+                    const room = this.rooms.find(r => r.id === roomId);
+                    title.textContent = 'Edit Room';
+                    document.getElementById('roomNumber').value = room.number;
+                    document.getElementById('roomType').value = room.type;
+                    document.getElementById('dailyRate').value = room.rates.daily;
+                    document.getElementById('weeklyRate').value = room.rates.weekly;
+                    document.getElementById('monthlyRate').value = room.rates.monthly;
+                    document.getElementById('roomDescription').value = room.description || '';
+                    form.dataset.roomId = roomId;
+                } else {
+                    title.textContent = 'Add Room';
+                    form.reset();
+                    delete form.dataset.roomId;
+                }
+
+                modal.style.display = 'block';
+            }
+
+            async saveRoom() {
+                const form = document.getElementById('roomForm');
+                const roomData = {
+                    number: document.getElementById('roomNumber').value,
+                    type: document.getElementById('roomType').value,
+                    rates: {
+                        daily: parseInt(document.getElementById('dailyRate').value),
+                        weekly: parseInt(document.getElementById('weeklyRate').value),
+                        monthly: parseInt(document.getElementById('monthlyRate').value)
+                    },
+                    description: document.getElementById('roomDescription').value,
+                    status: 'available',
+                    updatedAt: new Date().toISOString()
+                };
+
+                try {
+                    if (form.dataset.roomId) {
+                        // Edit existing room
+                        await update(ref(database, `rooms/${form.dataset.roomId}`), roomData);
+                        this.addActivity('Admin', `Updated Room ${roomData.number}`, 'success');
+                    } else {
+                        // Add new room
+                        roomData.id = `room_${Date.now()}`;
+                        roomData.createdAt = new Date().toISOString();
+                        await set(ref(database, `rooms/${roomData.id}`), roomData);
+                        this.addActivity('Admin', `Added new Room ${roomData.number}`, 'success');
+                    }
+
+                    document.getElementById('roomModal').style.display = 'none';
+                    this.showNotification('Room saved successfully!', 'success');
+                } catch (error) {
+                    console.error('Error saving room:', error);
+                    this.showNotification('Error saving room: ' + error.message, 'error');
+                }
+            }
+
+            editRoom(roomId) {
+                this.openRoomModal(roomId);
+            }
+
+            async checkoutRoom(roomId) {
+                if (confirm('Are you sure you want to checkout this room?')) {
+                    try {
+                        // Find active booking for this room
+                        const activeBooking = this.bookings.find(b =>
+                            b.roomId === roomId && b.status === 'checked-in'
+                        );
+
+                        if (activeBooking) {
+                            await update(ref(database, `bookings/${activeBooking.id}`), {
+                                status: 'checked-out',
+                                checkoutTime: new Date().toISOString(),
+                                updatedAt: new Date().toISOString()
+                            });
+                        }
+
+                        await update(ref(database, `rooms/${roomId}`), {
+                            status: 'available',
+                            updatedAt: new Date().toISOString()
+                        });
+
+                        const room = this.rooms.find(r => r.id === roomId);
+                        this.addActivity('Admin', `Checked out Room ${room?.number}`, 'success');
+                        this.showNotification('Room checked out successfully!', 'success');
+                    } catch (error) {
+                        console.error('Error checking out room:', error);
+                        this.showNotification('Error checking out room: ' + error.message, 'error');
+                    }
+                }
+            }
+
+            // Booking Management
+            loadBookings() {
+                const tbody = document.getElementById('bookingsTableBody');
+                tbody.innerHTML = '';
+
+                const roomFilter = document.getElementById('filterRoom');
+                roomFilter.innerHTML = '<option value="">All Rooms</option>';
+                this.rooms.forEach(room => {
+                    roomFilter.innerHTML += `<option value="${room.id}">Room ${room.number}</option>`;
+                });
+
+                document.getElementById('bookingCount').textContent = `${this.bookings.length} bookings`;
+                this.displayBookings(this.bookings);
+            }
+
+            displayBookings(bookings) {
+                const tbody = document.getElementById('bookingsTableBody');
+                tbody.innerHTML = '';
+
+                bookings.forEach(booking => {
+                    const row = document.createElement('tr');
+                    const room = this.rooms.find(r => r.id === booking.roomId);
+
+                    row.innerHTML = `
+                        <td><strong style="color: var(--primary);">${booking.id.slice(-8)}</strong></td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--gray-900);">${booking.guestName}</div>
+                            <div style="font-size: 0.875rem; color: var(--gray-600);">${booking.guestPhone}</div>
+                        </td>
+                        <td><strong>Room ${room ? room.number : 'N/A'}</strong></td>
+                        <td>${new Date(booking.checkinDate).toLocaleDateString()}</td>
+                        <td>${new Date(booking.checkoutDate).toLocaleDateString()}</td>
+                        <td><strong>${booking.duration} ${booking.bookingType}</strong></td>
+                        <td><strong style="color: var(--success);">৳${booking.totalAmount.toLocaleString()}</strong></td>
+                        <td><span class="status-badge status-${booking.status}">${booking.status.toUpperCase()}</span></td>
+                        <td>
+                            ${booking.status === 'confirmed' ? `
+                                <button class="action-btn checkin" onclick="hotelApp.updateBookingStatus('${booking.id}', 'checked-in')">
+                                    <i class="fas fa-sign-in-alt"></i> Check In
+                                </button>
+                            ` : ''}
+                            ${booking.status === 'checked-in' ? `
+                                <button class="action-btn checkout" onclick="hotelApp.updateBookingStatus('${booking.id}', 'checked-out')">
+                                    <i class="fas fa-sign-out-alt"></i> Check Out
+                                </button>
+                            ` : ''}
+                            <button class="action-btn delete" onclick="hotelApp.deleteBooking('${booking.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+
+                    tbody.appendChild(row);
+                });
+
+                if (bookings.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; color: var(--gray-500); padding: 2rem;">No bookings found</td></tr>';
+                }
+            }
+
+            openBookingModal(roomId = null) {
+                const modal = document.getElementById('bookingModal');
+                const roomSelect = document.getElementById('selectedRoom');
+
+                roomSelect.innerHTML = '<option value="">Choose a room</option>';
+                this.rooms.filter(room => room.status === 'available').forEach(room => {
+                    const selected = roomId === room.id ? 'selected' : '';
+                    roomSelect.innerHTML += `<option value="${room.id}" ${selected}>Room ${room.number} (${room.type})</option>`;
+                });
+
+                const now = new Date();
+                const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+                document.getElementById('checkinDate').value = now.toISOString().slice(0, 16);
+                document.getElementById('checkoutDate').value = tomorrow.toISOString().slice(0, 16);
+
+                modal.style.display = 'block';
+            }
+
+            calculateBookingAmount() {
+                const roomId = document.getElementById('selectedRoom').value;
+                const bookingType = document.getElementById('bookingType').value;
+                const checkinDate = new Date(document.getElementById('checkinDate').value);
+                const checkoutDate = new Date(document.getElementById('checkoutDate').value);
+
+                if (!roomId || !bookingType || !checkinDate || !checkoutDate) return;
+
+                const room = this.rooms.find(r => r.id === roomId);
+                if (!room) return;
+
+                let amount = 0;
+                const diffTime = Math.abs(checkoutDate - checkinDate);
+
+                switch (bookingType) {
+                    case 'daily':
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        amount = room.rates.daily * diffDays;
+                        break;
+                    case 'weekly':
+                        const diffWeeks = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 7));
+                        amount = room.rates.weekly * diffWeeks;
+                        break;
+                    case 'monthly':
+                        const diffMonths = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
+                        amount = room.rates.monthly * diffMonths;
+                        break;
+                }
+
+                document.getElementById('totalAmount').value = amount;
+            }
+
+            async createBooking() {
+                const bookingData = {
+                    guestName: document.getElementById('guestName').value,
+                    guestPhone: document.getElementById('guestPhone').value,
+                    guestEmail: document.getElementById('guestEmail').value,
+                    roomId: document.getElementById('selectedRoom').value,
+                    bookingType: document.getElementById('bookingType').value,
+                    checkinDate: document.getElementById('checkinDate').value,
+                    checkoutDate: document.getElementById('checkoutDate').value,
+                    totalAmount: parseInt(document.getElementById('totalAmount').value),
+                    specialRequests: document.getElementById('specialRequests').value,
+                    status: 'confirmed',
+                    createdAt: new Date().toISOString()
+                };
+
+                const checkin = new Date(bookingData.checkinDate);
+                const checkout = new Date(bookingData.checkoutDate);
+                const diffTime = Math.abs(checkout - checkin);
+
+                switch (bookingData.bookingType) {
+                    case 'daily':
+                        bookingData.duration = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        break;
+                    case 'weekly':
+                        bookingData.duration = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 7));
+                        break;
+                    case 'monthly':
+                        bookingData.duration = Math.ceil(diffTime / (1000 * 60 * 60 * 24 * 30));
+                        break;
+                }
+
+                try {
+                    const bookingId = `booking_${Date.now()}`;
+                    bookingData.id = bookingId;
+
+                    await set(ref(database, `bookings/${bookingId}`), bookingData);
+
+                    // Update room status
+                    await update(ref(database, `rooms/${bookingData.roomId}`), {
+                        status: 'occupied',
+                        updatedAt: new Date().toISOString()
+                    });
+
+                    const room = this.rooms.find(r => r.id === bookingData.roomId);
+                    this.addActivity('Admin', `New booking for ${bookingData.guestName} - Room ${room?.number}`, 'success');
+
+                    document.getElementById('bookingModal').style.display = 'none';
+                    document.getElementById('bookingForm').reset();
+                    this.showNotification('Booking created successfully!', 'success');
+                } catch (error) {
+                    console.error('Error creating booking:', error);
+                    this.showNotification('Error creating booking: ' + error.message, 'error');
+                }
+            }
+
+            async updateBookingStatus(bookingId, newStatus) {
+                try {
+                    const booking = this.bookings.find(b => b.id === bookingId);
+
+                    await update(ref(database, `bookings/${bookingId}`), {
+                        status: newStatus,
+                        [newStatus === 'checked-in' ? 'checkinTime' : 'checkoutTime']: new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    });
+
+                    if (newStatus === 'checked-out' || newStatus === 'cancelled') {
+                        await update(ref(database, `rooms/${booking.roomId}`), {
+                            status: 'available',
+                            updatedAt: new Date().toISOString()
+                        });
+                    }
+
+                    const room = this.rooms.find(r => r.id === booking.roomId);
+                    this.addActivity('Admin', `${newStatus.replace('-', ' ')} - ${booking.guestName} - Room ${room?.number}`, 'success');
+                    this.showNotification(`Booking ${newStatus.replace('-', ' ')} successfully!`, 'success');
+                } catch (error) {
+                    console.error('Error updating booking status:', error);
+                    this.showNotification('Error updating booking: ' + error.message, 'error');
+                }
+            }
+
+            async deleteBooking(bookingId) {
+                if (confirm('Are you sure you want to delete this booking?')) {
+                    try {
+                        const booking = this.bookings.find(b => b.id === bookingId);
+
+                        await remove(ref(database, `bookings/${bookingId}`));
+
+                        if (booking.roomId) {
+                            await update(ref(database, `rooms/${booking.roomId}`), {
+                                status: 'available',
+                                updatedAt: new Date().toISOString()
+                            });
+                        }
+
+                        this.addActivity('Admin', `Deleted booking for ${booking.guestName}`, 'warning');
+                        this.showNotification('Booking deleted successfully!', 'success');
+                    } catch (error) {
+                        console.error('Error deleting booking:', error);
+                        this.showNotification('Error deleting booking: ' + error.message, 'error');
+                    }
+                }
+            }
+
+            filterBookings() {
+                const filterDate = document.getElementById('filterDate').value;
+                const filterRoom = document.getElementById('filterRoom').value;
+                const filterStatus = document.getElementById('filterStatus').value;
+
+                let filteredBookings = this.bookings;
+
+                if (filterDate) {
+                    filteredBookings = filteredBookings.filter(booking => {
+                        const checkinDate = new Date(booking.checkinDate).toDateString();
+                        const filterDateObj = new Date(filterDate).toDateString();
+                        return checkinDate === filterDateObj;
+                    });
+                }
+
+                if (filterRoom) {
+                    filteredBookings = filteredBookings.filter(booking => booking.roomId === filterRoom);
+                }
+
+                if (filterStatus) {
+                    filteredBookings = filteredBookings.filter(booking => booking.status === filterStatus);
+                }
+
+                document.getElementById('bookingCount').textContent = `${filteredBookings.length} bookings`;
+                this.displayBookings(filteredBookings);
+            }
+
+            clearFilters() {
+                document.getElementById('filterDate').value = '';
+                document.getElementById('filterRoom').value = '';
+                document.getElementById('filterStatus').value = '';
+                this.loadBookings();
+            }
+
+            // Account Management
+            loadAccounts() {
+                this.updateAccountSummary();
+                this.loadExpenses();
+            }
+
+            updateAccountSummary() {
+                const totalRevenue = this.bookings
+                    .filter(b => b.status === 'checked-out')
+                    .reduce((sum, booking) => sum + (booking.totalAmount || 0), 0);
+
+                const totalExpenses = this.expenses
+                    .reduce((sum, expense) => sum + (expense.amount || 0), 0);
+
+                const netProfit = totalRevenue - totalExpenses;
+
+                document.getElementById('totalRevenue').textContent = `৳${totalRevenue.toLocaleString()}`;
+                document.getElementById('totalExpenses').textContent = `৳${totalExpenses.toLocaleString()}`;
+                document.getElementById('netProfit').textContent = `৳${netProfit.toLocaleString()}`;
+            }
+
+            loadExpenses() {
+                const tbody = document.getElementById('expenseTableBody');
+                tbody.innerHTML = '';
+
+                this.expenses.forEach(expense => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td style="font-weight: 600;">${new Date(expense.date).toLocaleDateString()}</td>
+                        <td>
+                            <div style="font-weight: 600; color: var(--gray-900);">${expense.description}</div>
+                            ${expense.notes ? `<div style="font-size: 0.875rem; color: var(--gray-600);">${expense.notes}</div>` : ''}
+                        </td>
+                        <td><span class="status-badge" style="background: var(--primary); color: white; border-color: var(--primary);">${expense.category}</span></td>
+                        <td><strong style="color: var(--danger);">৳${expense.amount.toLocaleString()}</strong></td>
+                        <td>
+                            <button class="action-btn edit" onclick="hotelApp.editExpense('${expense.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="hotelApp.deleteExpense('${expense.id}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                if (this.expenses.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--gray-500); padding: 2rem;">No expenses recorded</td></tr>';
+                }
+            }
+
+            openExpenseModal(expenseId = null) {
+                const modal = document.getElementById('expenseModal');
+                const form = document.getElementById('expenseForm');
+
+                if (expenseId) {
+                    const expense = this.expenses.find(e => e.id === expenseId);
+                    document.getElementById('expenseDescription').value = expense.description;
+                    document.getElementById('expenseCategory').value = expense.category;
+                    document.getElementById('expenseAmount').value = expense.amount;
+                    document.getElementById('expenseDate').value = expense.date;
+                    document.getElementById('expenseNotes').value = expense.notes || '';
+                    form.dataset.expenseId = expenseId;
+                } else {
+                    form.reset();
+                    document.getElementById('expenseDate').value = new Date().toISOString().split('T')[0];
+                    delete form.dataset.expenseId;
+                }
+
+                modal.style.display = 'block';
+            }
+
+            async addExpense() {
+                const form = document.getElementById('expenseForm');
+                const expenseData = {
+                    description: document.getElementById('expenseDescription').value,
+                    category: document.getElementById('expenseCategory').value,
+                    amount: parseFloat(document.getElementById('expenseAmount').value),
+                    date: document.getElementById('expenseDate').value,
+                    notes: document.getElementById('expenseNotes').value,
+                    createdAt: new Date().toISOString()
+                };
+
+                try {
+                    if (form.dataset.expenseId) {
+                        // Edit existing expense
+                        expenseData.updatedAt = new Date().toISOString();
+                        await update(ref(database, `expenses/${form.dataset.expenseId}`), expenseData);
+                        this.addActivity('Admin', `Updated expense: ${expenseData.description}`, 'success');
+                    } else {
+                        // Add new expense
+                        const expenseId = `expense_${Date.now()}`;
+                        expenseData.id = expenseId;
+                        await set(ref(database, `expenses/${expenseId}`), expenseData);
+                        this.addActivity('Admin', `Added expense: ${expenseData.description} - ৳${expenseData.amount}`, 'warning');
+                    }
+
+                    document.getElementById('expenseModal').style.display = 'none';
+                    this.showNotification('Expense saved successfully!', 'success');
+                } catch (error) {
+                    console.error('Error saving expense:', error);
+                    this.showNotification('Error saving expense: ' + error.message, 'error');
+                }
+            }
+
+            editExpense(expenseId) {
+                this.openExpenseModal(expenseId);
+            }
+
+            async deleteExpense(expenseId) {
+                if (confirm('Are you sure you want to delete this expense?')) {
+                    try {
+                        const expense = this.expenses.find(e => e.id === expenseId);
+                        await remove(ref(database, `expenses/${expenseId}`));
+                        this.addActivity('Admin', `Deleted expense: ${expense.description}`, 'warning');
+                        this.showNotification('Expense deleted successfully!', 'success');
+                    } catch (error) {
+                        console.error('Error deleting expense:', error);
+                        this.showNotification('Error deleting expense: ' + error.message, 'error');
+                    }
+                }
+            }
+
+            // Reports
+            loadReports() {
+                this.generateOccupancyChart();
+                this.generateRevenueChart();
+            }
+
+            generateOccupancyChart() {
+                const ctx = document.getElementById('occupancyChart').getContext('2d');
+
+                const last7Days = [];
+                const occupancyData = [];
+
+                for (let i = 6; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    last7Days.push(date.toLocaleDateString('en-BD', { month: 'short', day: 'numeric' }));
+
+                    const dayBookings = this.bookings.filter(booking => {
+                        const checkinDate = new Date(booking.checkinDate);
+                        const checkoutDate = new Date(booking.checkoutDate);
+                        return date >= checkinDate && date <= checkoutDate && booking.status !== 'cancelled';
+                    });
+
+                    const occupancyRate = this.rooms.length > 0 ? (dayBookings.length / this.rooms.length) * 100 : 0;
+                    occupancyData.push(occupancyRate);
+                }
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: last7Days,
+                        datasets: [{
+                            label: 'Occupancy Rate (%)',
+                            data: occupancyData,
+                            borderColor: 'rgb(99, 102, 241)',
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: 'rgb(99, 102, 241)',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 3,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: {
+                                    color: 'rgba(0,0,0,0.05)'
+                                },
+                                ticks: {
+                                    callback: function (value) {
+                                        return value + '%';
+                                    },
+                                    font: {
+                                        family: 'Inter',
+                                        weight: '500'
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    color: 'rgba(0,0,0,0.05)'
+                                },
+                                ticks: {
+                                    font: {
+                                        family: 'Inter',
+                                        weight: '500'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            generateRevenueChart() {
+                const ctx = document.getElementById('revenueChart').getContext('2d');
+
+                const last6Months = [];
+                const revenueData = [];
+
+                for (let i = 5; i >= 0; i--) {
+                    const date = new Date();
+                    date.setMonth(date.getMonth() - i);
+                    last6Months.push(date.toLocaleDateString('en-BD', { month: 'short', year: 'numeric' }));
+
+                    const monthBookings = this.bookings.filter(booking => {
+                        const bookingDate = new Date(booking.checkinDate);
+                        return bookingDate.getMonth() === date.getMonth() &&
+                            bookingDate.getFullYear() === date.getFullYear() &&
+                            booking.status === 'checked-out';
+                    });
+
+                    const monthRevenue = monthBookings.reduce((sum, booking) => sum + (booking.totalAmount || 0), 0);
+                    revenueData.push(monthRevenue);
+                }
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: last6Months,
+                        datasets: [{
+                            label: 'Revenue (৳)',
+                            data: revenueData,
+                            backgroundColor: 'rgba(99, 102, 241, 0.8)',
+                            borderColor: 'rgb(99, 102, 241)',
+                            borderWidth: 2,
+                            borderRadius: 8,
+                            borderSkipped: false,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: 'rgba(0,0,0,0.05)'
+                                },
+                                ticks: {
+                                    callback: function (value) {
+                                        return '৳' + value.toLocaleString();
+                                    },
+                                    font: {
+                                        family: 'Inter',
+                                        weight: '500'
+                                    }
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: {
+                                        family: 'Inter',
+                                        weight: '500'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Utility Methods
+            addActivity(actor, action, type) {
+                const activity = {
+                    actor,
+                    action,
+                    type,
+                    timestamp: new Date().toISOString()
+                };
+
+                this.recentActivities.unshift(activity);
+                if (this.recentActivities.length > 50) {
+                    this.recentActivities = this.recentActivities.slice(0, 50);
+                }
+
+                if (this.currentSection === 'dashboard') {
+                    this.loadRecentActivity();
+                }
+            }
+
+            showNotification(message, type = 'success') {
+                const notification = document.createElement('div');
+                notification.className = `notification ${type}`;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                    ${message}
+                `;
+
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.animation = 'slideInRight 0.3s ease reverse';
+                    setTimeout(() => {
+                        if (document.body.contains(notification)) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+        }
+
+        // Global functions
+        window.closeModal = function (modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Initialize the application
+        window.hotelApp = new HotelManagementApp();
+    </script>
+
+    <!-- Initialize AOS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof AOS !== 'undefined') {
+                AOS.init({
+                    duration: 800,
+                    once: true,
+                    offset: 50
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
